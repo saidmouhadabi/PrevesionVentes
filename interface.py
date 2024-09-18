@@ -24,7 +24,7 @@ st.title('Prévisions des ventes Lamacom')
 # Saisie de l'article, du type de prévision et de l'année
 article = st.text_input('Article')
 forecast_type = st.selectbox('Type de prévision', ['Mensuelles', 'Annuelles'])
-year = st.number_input('Année', min_value=2024, max_value=2100, value=2024)
+year = st.number_input('Année', min_value=2023, max_value=2100, value=2023)
 
 if st.button('Prévoir'):
     with st.spinner('Chargement des prévisions...'):
@@ -45,8 +45,8 @@ if st.button('Prévoir'):
                 # Remplacer les valeurs négatives par zéro
                 predictions['yhat'] = predictions['yhat'].clip(lower=0)
 
-                # Convertir la colonne 'ds' pour afficher seulement la date (sans l'heure)
-                predictions['ds'] = predictions['ds'].dt.date
+                # Convertir la colonne 'ds' pour afficher uniquement l'année et le mois
+                predictions['ds'] = predictions['ds'].dt.to_period('M').astype(str)
 
                 # Renommer les colonnes
                 predictions.rename(columns={'ds': 'Date', 'yhat': 'Quantité prévue'}, inplace=True)
@@ -86,4 +86,3 @@ if st.button('Prévoir'):
                 total_prediction_formatted = f"{total_prediction:,}".replace(',', ' ')
 
                 st.write(f"Prévision annuelle pour l'article {article} en {year} : {total_prediction_formatted}")
-
